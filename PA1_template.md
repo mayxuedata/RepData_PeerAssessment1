@@ -38,7 +38,10 @@ unzip(zipfile="./activity.zip")
 Read in the csv file:
 
 ```r
-activity <- read.csv("activity.csv", header = TRUE, sep = ',',  colClasses = c("numeric", "character", "integer"))
+activity <- read.csv("activity.csv", 
+                     header = TRUE, 
+                     sep = ',',  
+                     colClasses = c("numeric", "character", "integer"))
 ```
 
 ### Process data
@@ -46,20 +49,29 @@ Add datetime field to the dataset by combining date and interval
 
 ```r
 activity <- transform(activity, 
-    datetime = strptime(paste(date, formatC(interval, width=4, flag="0")), "%Y-%m-%d %H%M"))
+                      datetime = strptime(paste(date, 
+                              formatC(interval, 
+                                      width=4, 
+                                      flag="0")), 
+                              "%Y-%m-%d %H%M"))
 ```
 
 ## Mean total number of steps taken per day
 ### Calculate the total number of steps taken per day
 
 ```r
-stepsPerDay <- aggregate(steps ~ date, data = activity, FUN = sum)
+stepsPerDay <- aggregate(steps ~ date, 
+                         data = activity, 
+                         FUN = sum)
 ```
 
 ### Histogram of the total number of steps taken each day
 
 ```r
-hist(suppressWarnings(as.integer(unlist(stepsPerDay))), xlab = "Steps per day", ylab = "Frequency", main = "Histogram of Steps Taken Per Day")
+hist(suppressWarnings(as.integer(unlist(stepsPerDay))), 
+     xlab = "Steps per day", 
+     ylab = "Frequency", 
+     main = "Histogram of Steps Taken Per Day")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
@@ -68,7 +80,8 @@ hist(suppressWarnings(as.integer(unlist(stepsPerDay))), xlab = "Steps per day", 
 Mean steps taken per day:
 
 ```r
-meanStepsPerDay <- mean(stepsPerDay$steps, na.rm = TRUE)
+meanStepsPerDay <- mean(stepsPerDay$steps, 
+                        na.rm = TRUE)
 meanStepsPerDay
 ```
 
@@ -78,7 +91,8 @@ meanStepsPerDay
 Median steps taken per day:
 
 ```r
-medianStepsPerDay <- median(stepsPerDay$steps, na.rm = TRUE)
+medianStepsPerDay <- median(stepsPerDay$steps, 
+                            na.rm = TRUE)
 medianStepsPerDay
 ```
 
@@ -91,14 +105,20 @@ medianStepsPerDay
 Calculate average steps per interval:
 
 ```r
-stepsPerInterval <- aggregate(steps ~ interval, data = activity, FUN = mean)
+stepsPerInterval <- aggregate(steps ~ interval, 
+                              data = activity, 
+                              FUN = mean)
 ```
 
 Plot average steps per interval:
 
 ```r
-plot(stepsPerInterval$interval, stepsPerInterval$steps, type = "l",
-     xlab = "Interval", ylab = "Avg. Steps", main = "Average Daily Steps")
+plot(stepsPerInterval$interval, 
+     stepsPerInterval$steps, 
+     type = "l",
+     xlab = "Interval", 
+     ylab = "Avg. Steps", 
+     main = "Average Daily Steps")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
@@ -133,7 +153,9 @@ sum(is.na(activity$steps))
 Join the activity data with the stepsPerInterval that was calculated earlier:
 
 ```r
-filledActivity <- inner_join(activity, stepsPerInterval, by="interval")
+filledActivity <- inner_join(activity, 
+                             stepsPerInterval, 
+                             by="interval")
 ```
 Create a new dataset that is equal to the original dataset but with the missing data filled in. Fill in missing values with the means for same 5-minute interval, and make the new dataset `filledActivity`
 
@@ -148,8 +170,13 @@ for (i in 1:nrow(filledActivity)) {
 ### Histogram of the total number of steps taken each day 
 
 ```r
-stepsPerDayFilled <- aggregate(steps.x ~ date, data = filledActivity, FUN = sum)
-hist(suppressWarnings(as.integer(unlist(stepsPerDayFilled))), xlab = "Steps per day", ylab = "Frequency", main = "Histogram of Steps Taken Per Day (NAs Filled in)")
+stepsPerDayFilled <- aggregate(steps.x ~ date, 
+                               data = filledActivity, 
+                               FUN = sum)
+hist(suppressWarnings(as.integer(unlist(stepsPerDayFilled))), 
+     xlab = "Steps per day", 
+     ylab = "Frequency", 
+     main = "Histogram of Steps Taken Per Day (NAs Filled in)")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-15-1.png) 
@@ -158,7 +185,8 @@ hist(suppressWarnings(as.integer(unlist(stepsPerDayFilled))), xlab = "Steps per 
 Calculate and report the mean and median total number of steps taken per day
 
 ```r
-meanStepsPerDayFilled <- mean(stepsPerDayFilled$steps.x, na.rm = TRUE)
+meanStepsPerDayFilled <- mean(stepsPerDayFilled$steps.x, 
+                              na.rm = TRUE)
 meanStepsPerDayFilled
 ```
 
@@ -168,7 +196,8 @@ meanStepsPerDayFilled
 Median steps taken per day:
 
 ```r
-medianStepsPerDayFilled <- median(stepsPerDayFilled$steps.x, na.rm = TRUE)
+medianStepsPerDayFilled <- median(stepsPerDayFilled$steps.x, 
+                                  na.rm = TRUE)
 medianStepsPerDayFilled
 ```
 
@@ -189,8 +218,14 @@ After imputing missing data, the total daily number of steps has increased:
 
 ```r
 par(mfrow = c(1, 2)) 
-hist(suppressWarnings(as.integer(unlist(stepsPerDay))), xlab = "Steps per day", ylab = "Frequency", main = "Histogram of Steps Taken Per Day")
-hist(suppressWarnings(as.integer(unlist(stepsPerDayFilled))), xlab = "Steps per day", ylab = "Frequency", main = "Histogram of Steps Taken Per Day")
+hist(suppressWarnings(as.integer(unlist(stepsPerDay))), 
+     xlab = "Steps per day", 
+     ylab = "Frequency", 
+     main = "Histogram of Steps Taken Per Day")
+hist(suppressWarnings(as.integer(unlist(stepsPerDayFilled))), 
+     xlab = "Steps per day", 
+     ylab = "Frequency", 
+     main = "Histogram of Steps Taken Per Day")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-18-1.png) 
@@ -199,17 +234,24 @@ hist(suppressWarnings(as.integer(unlist(stepsPerDayFilled))), xlab = "Steps per 
 Add a field `type` to the new dataset indicating if it's a weekend or weekday:
 
 ```r
-filledActivity <- mutate(filledActivity, type = ifelse(weekdays(filledActivity$datetime) == "Saturday" | weekdays(filledActivity$datetime) == "Sunday", "weekend", "weekday"))
+filledActivity <- mutate(filledActivity, 
+    type = ifelse(weekdays(filledActivity$datetime) == "Saturday" 
+        | weekdays(filledActivity$datetime) == "Sunday", "weekend", "weekday"))
 ```
 
 Plot the average number of steps per 5-minute interval for weekend vs. weekday:
 
 
 ```r
-avgSteps <- aggregate(steps.x ~ interval + type, data = filledActivity, mean)
+avgSteps <- aggregate(steps.x ~ interval + type, 
+                      data = filledActivity, 
+                      mean)
 
-ggplot(avgSteps, aes(interval, steps.x)) + geom_line(color = 'blue') + facet_wrap(~type, ncol = 1, nrow = 2) +
-    xlab("Interval") + ylab("Number of steps")
+ggplot(avgSteps, aes(interval, steps.x)) + 
+    geom_line(color = 'blue') + 
+    facet_wrap(~type, ncol = 1, nrow = 2) +
+    xlab("Interval") + 
+    ylab("Number of steps")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-20-1.png) 
